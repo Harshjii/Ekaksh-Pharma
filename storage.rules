@@ -1,0 +1,21 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Helper function to check if request is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Rules for public product images and site assets
+    match /products/{allPaths=**} {
+      allow read: if true;
+      allow write, delete: if isAuthenticated();
+    }
+
+    // Rules for general site assets
+    match /assets/{allPaths=**} {
+      allow read: if true;
+      allow write, delete: if isAuthenticated();
+    }
+  }
+}

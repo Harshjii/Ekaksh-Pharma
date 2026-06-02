@@ -1,0 +1,37 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function to check if request is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Rules for Products and Categories (Public read, authenticated admin write)
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    // Rules for Website Settings (Public read, authenticated admin write)
+    match /websiteSettings/{settingId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    // Rules for Contact Messages (Public create, authenticated admin read/write)
+    match /contactMessages/{messageId} {
+      allow create: if true;
+      allow read, update, delete: if isAuthenticated();
+    }
+
+    // Rules for Admins metadata
+    match /admins/{adminId} {
+      allow read, write: if isAuthenticated();
+    }
+  }
+}
