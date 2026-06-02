@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeft, ArrowRight, ArrowDownRight } from 'lucide-react';
-import { getProducts } from '../services/db';
+
 
 interface CarouselItem {
   name: string;
@@ -231,12 +231,11 @@ export default function HeroCarousel() {
                 <img
                   src={item.image}
                   alt={item.name}
-                  className={`w-full h-[88%] object-contain object-bottom transition-all duration-500 ${
-                    isCenter ? 'scale-[1.25] filter drop-shadow-[0_20px_35px_rgba(0,0,0,0.4)]' : 'scale-[1.05] opacity-80'
-                  }`}
+                  className={`w-full h-[88%] object-contain object-bottom transition-all duration-500 ${isCenter ? 'scale-[1.25] filter drop-shadow-[0_20px_35px_rgba(0,0,0,0.4)]' : 'scale-[1.05] opacity-80'
+                    }`}
                   draggable={false}
                 />
-                
+
                 {/* Active product inline name tag */}
                 {isCenter && (
                   <div className="absolute bottom-[-45px] left-1/2 -translate-x-1/2 glass-card px-4 py-1.5 rounded-full border border-white/30 text-teal-950 font-bold text-xs uppercase tracking-wider shadow-lg whitespace-nowrap">
@@ -251,7 +250,7 @@ export default function HeroCarousel() {
 
       {/* 5. Navigation & Status Bar */}
       <div style={{ zIndex: 35 }} className="relative max-w-7xl mx-auto px-6 w-full pb-10 flex flex-col sm:flex-row items-center justify-between gap-6">
-        
+
         {/* Left Side: Product Title Indicator */}
         <div className="text-left text-white max-w-[280px] hidden md:block">
           <span className="text-[10px] uppercase font-bold tracking-widest text-teal-300">Featured Solution</span>
