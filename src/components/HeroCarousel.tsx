@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeft, ArrowRight, ArrowDownRight } from 'lucide-react';
+import { getProducts } from '../services/db';
 
 interface CarouselItem {
   name: string;
@@ -9,47 +10,84 @@ interface CarouselItem {
   panel: string;
 }
 
-const carouselItems: CarouselItem[] = [
-  { name: 'Muconib Tablets', category: 'Nutraceuticals', image: '/muconib_tablets.png', bg: '#0b5a60', panel: '#0f766e' },
-  { name: 'Calmeal Plus', category: 'Nutraceuticals', image: '/calmeal_plus.png', bg: '#0d7c57', panel: '#10b981' },
-  { name: 'Florek Capsules', category: 'Capsules', image: '/florek_capsules.png', bg: '#08636b', panel: '#0d9488' },
-  { name: 'Esperto-Q', category: 'Nutraceuticals', image: '/esperto_q.png', bg: '#172554', panel: '#1e3a8a' },
-];
-
 export default function HeroCarousel() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [carouselProducts, setCarouselProducts] = useState<CarouselItem[]>([]);
 
-  // Detect mobile viewport
+  // Default fallback data in case loading takes time
+  const fallbackCarousel: CarouselItem[] = [
+    { name: 'Muconib Tablets', category: 'Nutraceuticals', image: '/muconib_tablets.png', bg: '#0b5a60', panel: '#0f766e' },
+    { name: 'Calmeal Plus', category: 'Nutraceuticals', image: '/calmeal_plus.png', bg: '#0d7c57', panel: '#10b981' },
+    { name: 'Florek Capsules', category: 'Capsules', image: '/florek_capsules.png', bg: '#08636b', panel: '#0d9488' },
+    { name: 'Esperto-Q', category: 'Nutraceuticals', image: '/esperto_q.png', bg: '#172554', panel: '#1e3a8a' },
+  ];
+
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 640);
+    // Load Settings and Products
+    const loadData = async () => {
+      try {
+        const prods = await getProducts();
+        // Take first 4 active products to display in the carousel
+        const activeProds = prods.filter(p => p.status === 'active').slice(0, 4);
+        if (activeProds.length > 0) {
+          const colors = [
+            { bg: '#0b5a60', panel: '#0f766e' }, // Muconib (Deep Teal)
+            { bg: '#0d7c57', panel: '#10b981' }, // Calmeal (Emerald/Green)
+            { bg: '#08636b', panel: '#0d9488' }, // Florek (Teal/Cyan)
+            { bg: '#172554', panel: '#1e3a8a' }, // Esperto (Deep Navy/Blue)
+          ];
+          const mapped = activeProds.map((p, idx) => ({
+            name: p.name,
+            category: p.category,
+            image: p.image,
+            bg: colors[idx % colors.length].bg,
+            panel: colors[idx % colors.length].panel
+          }));
+          setCarouselProducts(mapped);
+        } else {
+          setCarouselProducts(fallbackCarousel);
+        }
+      } catch (err) {
+        console.error("Failed to load settings or carousel products:", err);
+        setCarouselProducts(fallbackCarousel);
+      }
+    };
+    loadData();
+
+    // Check screen size
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  const items = carouselItems;
+  const items = carouselProducts.length > 0 ? carouselProducts : fallbackCarousel;
 
   // Preload images
   useEffect(() => {
-    items.forEach((item) => {
-      const img = new Image();
-      img.src = item.image;
-    });
-  }, []);
+    if (items.length > 0) {
+      items.forEach((item) => {
+        const img = new Image();
+        img.src = item.image;
+      });
+    }
+  }, [items]);
 
-  // Autoplay slide transition (every 3 seconds)
+  // Autoplay slide transition (every 1 second)
   useEffect(() => {
-    if (isAnimating) return;
+    if (items.length === 0 || isAnimating) return;
     const timer = setInterval(() => {
       navigate('next');
-    }, 3000);
+    }, 1000);
     return () => clearInterval(timer);
-  }, [activeIndex, isAnimating]);
+  }, [activeIndex, isAnimating, items.length]);
 
   const navigate = (direction: 'next' | 'prev') => {
-    if (isAnimating) return;
+    if (isAnimating || items.length === 0) return;
     setIsAnimating(true);
 
     setActiveIndex((prev) => {
@@ -77,6 +115,7 @@ export default function HeroCarousel() {
   const backIndex = (activeIndex + 2) % items.length;
 
   const getRoleStyles = (i: number) => {
+    if (items.length === 0) return {};
     if (i === centerIndex) {
       return {
         transform: `translateX(-50%) scale(${isMobile ? 1.25 : 1.55})`,
@@ -126,7 +165,7 @@ export default function HeroCarousel() {
 
   const grainSvg = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' opacity='0.05'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E`;
 
-  const currentItem = items[activeIndex];
+  const currentItem = items[activeIndex] || fallbackCarousel[0];
   const currentBg = currentItem.bg;
 
   return (
