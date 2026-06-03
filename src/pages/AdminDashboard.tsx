@@ -795,16 +795,42 @@ export default function AdminDashboard() {
                         />
                       </div>
 
-                      <div>
-                        <label className="block text-slate-400 text-xs font-semibold uppercase tracking-wider mb-1.5">Corporate Phone Number</label>
-                        <input
-                          type="text"
-                          required
-                          value={settings.phone}
-                          onChange={(e) => setSettings({ ...settings, phone: e.target.value })}
-                          className={`w-full px-4 py-2.5 rounded-xl border text-sm focus:outline-none ${inputClass}`}
-                        />
-                      </div>
+                      {(() => {
+                        const phones = settings.phone.split(',');
+                        const phone1 = phones[0] || '';
+                        const phone2 = phones[1] !== undefined 
+                          ? (phones[1].startsWith(' ') ? phones[1].substring(1) : phones[1]) 
+                          : '';
+                        return (
+                          <>
+                            <div>
+                              <label className="block text-slate-400 text-xs font-semibold uppercase tracking-wider mb-1.5">Phone 1 (Sales Inquiry)</label>
+                              <input
+                                type="text"
+                                required
+                                value={phone1}
+                                onChange={(e) => {
+                                  const val = e.target.value;
+                                  setSettings({ ...settings, phone: phone2 ? `${val}, ${phone2}` : val });
+                                }}
+                                className={`w-full px-4 py-2.5 rounded-xl border text-sm focus:outline-none ${inputClass}`}
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-slate-400 text-xs font-semibold uppercase tracking-wider mb-1.5">Phone 2 (Support & General)</label>
+                              <input
+                                type="text"
+                                value={phone2}
+                                onChange={(e) => {
+                                  const val = e.target.value;
+                                  setSettings({ ...settings, phone: val ? `${phone1}, ${val}` : phone1 });
+                                }}
+                                className={`w-full px-4 py-2.5 rounded-xl border text-sm focus:outline-none ${inputClass}`}
+                              />
+                            </div>
+                          </>
+                        );
+                      })()}
 
                       <div className="md:col-span-2">
                         <label className="block text-slate-400 text-xs font-semibold uppercase tracking-wider mb-1.5">Corporate Address</label>

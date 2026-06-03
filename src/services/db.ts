@@ -137,7 +137,7 @@ const DEFAULT_SETTINGS: WebsiteSettings = {
   established: '1 January 2025',
   tagline: 'Delivering Health, Trust & Innovation',
   subheading: 'Providing high-quality pharmaceutical solutions with a strong focus on healthcare excellence, innovation, and customer satisfaction.',
-  phone: '+91 9389049159',
+  phone: '+91 93890 49159, +91 96508 57719',
   address: 'Gadda Colony Road, Kashipur, Udham Singh Nagar, Uttarakhand – 244713, India',
   gstNumber: '05CNLPC4830L1ZY',
   workingDays: 'Monday - Saturday',
@@ -154,6 +154,19 @@ const initLocalStorage = () => {
   }
   if (!localStorage.getItem('ekaksh_settings')) {
     localStorage.setItem('ekaksh_settings', JSON.stringify(DEFAULT_SETTINGS));
+  } else {
+    try {
+      const stored = localStorage.getItem('ekaksh_settings');
+      if (stored) {
+        const settings = JSON.parse(stored);
+        if (settings.phone === '+91 9389049159' || settings.phone === '+91 93890 49159') {
+          settings.phone = '+91 93890 49159, +91 96508 57719';
+          localStorage.setItem('ekaksh_settings', JSON.stringify(settings));
+        }
+      }
+    } catch (e) {
+      console.error("Failed to migrate settings:", e);
+    }
   }
   if (!localStorage.getItem('ekaksh_messages')) {
     localStorage.setItem('ekaksh_messages', JSON.stringify([]));
@@ -334,14 +347,30 @@ export const getSettings = async (): Promise<WebsiteSettings> => {
       const docRef = doc(firestoreDb, 'websiteSettings', 'main');
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        return docSnap.data() as WebsiteSettings;
+        const data = docSnap.data() as WebsiteSettings;
+        if (data.phone === '+91 9389049159' || data.phone === '+91 93890 49159') {
+          const updated = { ...data, phone: '+91 93890 49159, +91 96508 57719' };
+          try {
+            await setDoc(docRef, updated);
+            console.log("Migrated Firestore settings phone numbers.");
+          } catch (e) {
+            console.error("Failed to update Firestore settings during migration:", e);
+          }
+          return updated;
+        }
+        return data;
       }
     } catch (err) {
       console.error("Firebase getSettings error:", err);
     }
   }
 
-  return JSON.parse(localStorage.getItem('ekaksh_settings') || JSON.stringify(DEFAULT_SETTINGS));
+  const localSettings = JSON.parse(localStorage.getItem('ekaksh_settings') || JSON.stringify(DEFAULT_SETTINGS));
+  if (localSettings.phone === '+91 9389049159' || localSettings.phone === '+91 93890 49159') {
+    localSettings.phone = '+91 93890 49159, +91 96508 57719';
+    localStorage.setItem('ekaksh_settings', JSON.stringify(localSettings));
+  }
+  return localSettings;
 };
 
 export const updateSettings = async (settings: WebsiteSettings): Promise<void> => {

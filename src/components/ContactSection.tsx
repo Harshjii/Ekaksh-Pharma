@@ -82,35 +82,45 @@ export default function ContactSection() {
                   </p>
                 </div>
               </div>
-
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-xl bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-600 shrink-0">
-                  <Phone size={20} />
-                </div>
-                <div>
-                  <h4 className="font-extrabold text-slate-900 text-sm uppercase tracking-wider">Contact Number</h4>
-                  <p className="text-slate-600 text-sm mt-1 font-light leading-none">
-                    {settings?.phone || '+91 9389049159'}
-                  </p>
-                  <div className="flex gap-3 mt-3">
-                    <a
-                      href={`tel:${(settings?.phone || '+919389049159').replace(/\s+/g, '')}`}
-                      className="px-3 py-1.5 rounded-lg bg-teal-600 hover:bg-teal-500 text-white text-[11px] font-bold uppercase tracking-wider transition-colors cursor-pointer"
-                    >
-                      Call Now
-                    </a>
-                    <a
-                      href={`https://wa.me/${(settings?.phone || '+91 9389049159').replace(/[^0-9]/g, '')}?text=Hello%20Ekaksh%20Pharma`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold uppercase tracking-wider transition-colors cursor-pointer"
-                    >
-                      WhatsApp
-                    </a>
-                  </div>
-                </div>
-              </div>
-
+              {/* Contact Cards for each phone number */}
+              {(settings?.phone || '+91 93890 49159, +91 96508 57719')
+                .split(',')
+                .map((numStr) => numStr.trim())
+                .filter(Boolean)
+                .map((phoneNum, idx) => {
+                  const labels = ['Sales Inquiry', 'Support & General'];
+                  return (
+                    <div key={idx} className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-xl bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-600 shrink-0">
+                        <Phone size={20} />
+                      </div>
+                      <div>
+                        <h4 className="font-extrabold text-slate-900 text-sm uppercase tracking-wider">
+                          {labels[idx] || `Phone ${idx + 1}`}
+                        </h4>
+                        <p className="text-slate-600 text-sm mt-1 font-light leading-none">
+                          {phoneNum}
+                        </p>
+                        <div className="flex gap-3 mt-3">
+                          <a
+                            href={`tel:${phoneNum.replace(/\s+/g, '')}`}
+                            className="px-3 py-1.5 rounded-lg bg-teal-600 hover:bg-teal-500 text-white text-[11px] font-bold uppercase tracking-wider transition-colors cursor-pointer inline-block"
+                          >
+                            Call Now
+                          </a>
+                          <a
+                            href={`https://wa.me/${phoneNum.replace(/[^0-9]/g, '')}?text=Hello%20Ekaksh%20Pharma`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold uppercase tracking-wider transition-colors cursor-pointer inline-block"
+                          >
+                            WhatsApp
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 rounded-xl bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-600 shrink-0">
                   <Percent size={20} />

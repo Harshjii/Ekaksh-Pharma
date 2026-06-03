@@ -166,7 +166,19 @@ export default function Footer() {
           
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-center md:text-left">
             <span>GSTIN: {settings?.gstNumber || '05CNLPC4830L1ZY'}</span>
-            <span>Tel: {settings?.phone || '+91 9389049159'}</span>
+            <span>
+              Tel:{' '}
+              {(settings?.phone || '+91 93890 49159, +91 96508 57719')
+                .split(',')
+                .map((num, i) => (
+                  <React.Fragment key={i}>
+                    {i > 0 && ' / '}
+                    <a href={`tel:${num.trim().replace(/\s+/g, '')}`} className="hover:text-teal-400 transition-colors">
+                      {num.trim()}
+                    </a>
+                  </React.Fragment>
+                ))}
+            </span>
             <span className="max-w-xs truncate">Address: {settings?.address || 'Kashipur, Uttarakhand, India'}</span>
           </div>
 
