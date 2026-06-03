@@ -150,13 +150,6 @@ export default function AdminLoginPage() {
             </button>
           </form>
 
-          {/* Quick tips */}
-          <div className="mt-6 pt-4 border-t border-white/5 text-center">
-            <span className="text-[9px] uppercase font-bold text-slate-500 tracking-wider block mb-1">Local Setup Credentials</span>
-            <div className="text-[11px] text-slate-400 font-mono select-all bg-slate-950/40 py-1.5 px-3 rounded-lg border border-white/5 inline-block">
-              admin@ekakshpharma.com / admin123
-            </div>
-          </div>
 
         </div>
 
