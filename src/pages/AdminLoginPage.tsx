@@ -75,7 +75,7 @@ export default function AdminLoginPage() {
         {/* Brand Header */}
         <div className="text-center mb-6 sm:mb-8 w-full">
           <img 
-            src="/logo.jpg" 
+            src="/logo.png" 
             alt="EKAKSH PHARMA Logo" 
             className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl object-cover mx-auto mb-3 sm:mb-4 shadow-lg shadow-teal-500/10 border border-white/20" 
           />

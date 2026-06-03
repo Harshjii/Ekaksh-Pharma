@@ -67,7 +67,7 @@ export default function Navbar() {
           {/* Logo Brand */}
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleNavClick('home')}>
             <img 
-              src="/logo.jpg" 
+              src="/logo.png" 
               alt="EKAKSH PHARMA Logo" 
               className="w-10 h-10 rounded-lg object-cover shadow-md border border-white/20" 
             />

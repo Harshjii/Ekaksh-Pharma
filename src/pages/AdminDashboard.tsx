@@ -294,7 +294,7 @@ export default function AdminDashboard() {
           <div className="flex items-center justify-between pb-6 border-b border-white/10">
             <div className="flex items-center gap-2">
               <img 
-                src="/logo.jpg" 
+                src="/logo.png" 
                 alt="EKAKSH Logo" 
                 className="w-9 h-9 rounded-lg object-cover border border-white/20" 
               />
@@ -419,7 +419,7 @@ export default function AdminDashboard() {
             <Menu size={20} />
           </button>
           <div className="flex items-center gap-2">
-            <img src="/logo.jpg" alt="Ekaksh Logo" className="w-8 h-8 rounded-lg object-cover" />
+            <img src="/logo.png" alt="Ekaksh Logo" className="w-8 h-8 rounded-lg object-cover" />
             <span className="font-extrabold text-sm tracking-wide">EKAKSH ADMIN</span>
           </div>
           <button

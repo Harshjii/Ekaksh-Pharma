@@ -51,7 +51,7 @@ export default function Footer() {
           <div className="lg:col-span-4 space-y-5">
             <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleScrollTo('home')}>
               <img 
-                src="/logo.jpg" 
+                src="/logo.png" 
                 alt="EKAKSH PHARMA Logo" 
                 className="w-9 h-9 rounded-lg object-cover border border-white/10" 
               />
